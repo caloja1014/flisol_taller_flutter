@@ -38,7 +38,7 @@ class Pokemon {
         localStats[name] = baseStat;
       }
     });
-    final name = json['name'].toUpperCase() + json['name'].substring(1);
+    final name = json['name'][0].toUpperCase() + json['name'].substring(1);
     return Pokemon(
       id: json['id'],
       name: name,
@@ -49,5 +49,9 @@ class Pokemon {
       specialAttack: localStats["special-attack"]!,
       hp: localStats["hp"]!,
     );
+  }
+  @override
+  String toString() {
+    return "Pokemon: $name, $imageUrl, $hp, $attack, $defense, $specialAttack, $experience";
   }
 }
