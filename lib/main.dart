@@ -1,3 +1,5 @@
+import 'package:flisol_taller_flutter/components/search_bar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -82,6 +84,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     const double iconTabSize = 30;
@@ -94,14 +98,22 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            Text(
-              'Hello world',
-            ),
-          ],
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SearchBar(
+                controller: _searchController,
+                onSearch: (text) {
+                  if (kDebugMode) {
+                    print(text);
+                  }
+                },
+              )
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -130,7 +142,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        // selectedItemColor: Theme.of(context).focusColor,
         onTap: _onItemTapped,
       ),
     );
