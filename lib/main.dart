@@ -1,4 +1,6 @@
+import 'package:flisol_taller_flutter/components/pokemon_container.dart';
 import 'package:flisol_taller_flutter/components/search_bar.dart';
+import 'package:flisol_taller_flutter/model/pokemon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -29,6 +31,7 @@ class MyApp extends StatelessWidget {
       0xFF365DA0,
       color,
     );
+
     return MaterialApp(
       title: 'Pokemon library',
       theme: ThemeData(
@@ -88,6 +91,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+        final mockPokemon =Pokemon(
+      id: 1,
+      name: 'Bulbasaur',
+      imageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+      attack: 10,
+      defense: 10,
+      experience: 10,
+      specialAttack: 10,
+      hp: 10
+
+    );
     const double iconTabSize = 30;
     return Scaffold(
       appBar: AppBar(
@@ -111,7 +125,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     print(text);
                   }
                 },
-              )
+              ),
+              PokemonContainer(
+                pokemon: mockPokemon,)
             ],
           ),
         ),

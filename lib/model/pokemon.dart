@@ -7,8 +7,8 @@ class Pokemon {
   final int attack;
   final int defense;
   final int specialAttack;
-
-  const Pokemon({
+  bool isFavorite ;
+   Pokemon({
     required this.id,
     required this.name,
     required this.imageUrl,
@@ -17,8 +17,11 @@ class Pokemon {
     required this.defense,
     required this.specialAttack,
     required this.hp,
+    this.isFavorite = false,
   });
-
+  set favorite(bool value) {
+    isFavorite = value;
+  }
   factory Pokemon.fromJson(Map<String, dynamic> json) {
     final sprites = json["sprites"];
     final other = sprites["other"];
