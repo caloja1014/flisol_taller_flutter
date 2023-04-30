@@ -15,7 +15,7 @@ class PokeApi {
   }
 
   static Future getPokemons({
-    int limit = 20,
+    int limit = 10,
     int offset = 0,
   }) async {
     final response = await http
@@ -27,5 +27,19 @@ class PokeApi {
     } else {
       throw Exception('Failed to load pokemons');
     }
+  }
+
+  static Future<List<Pokemon>> getAllInfoPokemons({
+    int limit = 20,
+    int offset = 0,
+  }) {
+    return getPokemons(limit: limit, offset: offset).then((pokemons) async {
+      final pokemonsWithInfo = <Pokemon>[];
+      for (final pokemon in pokemons) {
+        final pokemonInfo = await getPokemon(pokemon['name']);
+        pokemonsWithInfo.add(pokemonInfo);
+      }
+      return pokemonsWithInfo;
+    });
   }
 }

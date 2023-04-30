@@ -25,7 +25,7 @@ class Pokemon {
   factory Pokemon.fromJson(Map<String, dynamic> json) {
     final sprites = json["sprites"];
     final other = sprites["other"];
-    String imageUrl = other["dream_world"]["front_default"];
+    String imageUrl = other["official-artwork"]["front_default"];
     final stats = json["stats"];
     Map<String, int> localStats = {
       "hp": 0,

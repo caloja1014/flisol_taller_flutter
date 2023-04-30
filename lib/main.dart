@@ -3,6 +3,7 @@ import 'package:flisol_taller_flutter/components/search_bar.dart';
 import 'package:flisol_taller_flutter/model/pokemon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flisol_taller_flutter/api/poke_api.dart';
 
 void main() {
   runApp(const MyApp());
@@ -88,33 +89,51 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   final TextEditingController _searchController = TextEditingController();
-  static final mockPokemon = Pokemon(
-      id: 1,
-      name: 'Bulbasaur',
-      imageUrl:
-          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
-      attack: 10,
-      defense: 10,
-      experience: 10,
-      specialAttack: 10,
-      hp: 10);
+  // static final mockPokemon = Pokemon(
+  //     id: 1,
+  //     name: 'Bulbasaur',
+  //     imageUrl:
+  //         'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+  //     attack: 10,
+  //     defense: 10,
+  //     experience: 10,
+  //     specialAttack: 10,
+  //     hp: 10);
 
-  final favoritesPokemon = <Pokemon>[
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon
-  ];
+  // final favoritesPokemon = <Pokemon>[
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon
+  // ];
+  final favoritesPokemon = <Pokemon>[];
   final allPokemon = <Pokemon>[
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon
   ];
+  //  final allPokemon = <Pokemon>[
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon
+  // ];
+  bool isLoading = false;
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      isLoading = true;
+    });
+    PokeApi.getAllInfoPokemons().then((value) {
+      setState(() {
+        allPokemon.addAll(value);
+        isLoading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     const double iconTabSize = 30;
@@ -134,6 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               SearchBar(
+                isDisabled: isLoading,
                 controller: _searchController,
                 onSearch: (text) {
                   if (kDebugMode) {
@@ -184,7 +204,15 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(
                 height: 20,
               ),
-              Expanded(
+
+              isLoading? 
+             const  Expanded(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              )
+              
+              :Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

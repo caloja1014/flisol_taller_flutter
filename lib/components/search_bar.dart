@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class SearchBar extends StatefulWidget {
   final TextEditingController controller;
   final Function(String) onSearch;
-  const SearchBar({
+  bool isDisabled;
+  SearchBar({
     super.key,
     required this.controller,
     required this.onSearch,
+    this.isDisabled = false,
   });
 
   @override
@@ -23,6 +25,7 @@ class _SearchBarState extends State<SearchBar> {
           horizontal: 8,
         ),
         child: TextField(
+          enabled: !widget.isDisabled,
           textAlignVertical: TextAlignVertical.center,
           textAlign: TextAlign.left,
           controller: widget.controller,
