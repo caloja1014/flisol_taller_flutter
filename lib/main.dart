@@ -88,20 +88,35 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   final TextEditingController _searchController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-        final mockPokemon =Pokemon(
+  static final mockPokemon = Pokemon(
       id: 1,
       name: 'Bulbasaur',
-      imageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+      imageUrl:
+          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
       attack: 10,
       defense: 10,
       experience: 10,
       specialAttack: 10,
-      hp: 10
+      hp: 10);
 
-    );
+  final favoritesPokemon = <Pokemon>[
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon
+  ];
+  final allPokemon = <Pokemon>[
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon
+  ];
+  @override
+  Widget build(BuildContext context) {
     const double iconTabSize = 30;
     return Scaffold(
       appBar: AppBar(
@@ -126,8 +141,84 @@ class _MyHomePageState extends State<MyHomePage> {
                   }
                 },
               ),
-              PokemonContainer(
-                pokemon: mockPokemon,)
+              SizedBox(
+                height: favoritesPokemon.isNotEmpty ? 20 : 0,
+              ),
+              favoritesPokemon.isNotEmpty
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Favoritos",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: favoritesPokemon
+                                .map(
+                                  (pokemon) => Row(
+                                    children: [
+                                      PokemonContainer(
+                                        pokemon: pokemon,
+                                        showFavorite: false,
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ],
+                    )
+                  : const SizedBox(),
+              const SizedBox(
+                height: 20,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Todos",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          children: allPokemon
+                              .map(
+                                (pokemon) => PokemonContainer(
+                                  pokemon: pokemon,
+                                  showFavorite: true,
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
             ],
           ),
         ),

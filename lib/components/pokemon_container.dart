@@ -53,7 +53,7 @@ class _PokemonContainerState extends State<PokemonContainer> {
               )
             ],
           ),
-          Positioned(
+          widget.showFavorite? Positioned(
             top: -5,
             right: -5,
             child: IconButton(
@@ -71,7 +71,7 @@ class _PokemonContainerState extends State<PokemonContainer> {
                 color: Theme.of(context).focusColor,
               ),
             ),
-          ),
+          ): const SizedBox(),
           SizedBox(
             width: width,
             height: height,
