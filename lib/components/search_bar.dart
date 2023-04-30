@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class SearchBar extends StatefulWidget {
   final TextEditingController controller;
   final Function(String) onSearch;
+  final Function onClear;
   bool isDisabled;
   SearchBar({
     super.key,
     required this.controller,
     required this.onSearch,
+    required this.onClear,
     this.isDisabled = false,
   });
 
@@ -47,6 +49,7 @@ class _SearchBarState extends State<SearchBar> {
               alignment: Alignment.center,
               onPressed: () {
                 widget.controller.clear();
+                widget.onClear();
               },
               icon: const Icon(Icons.clear),
             ),

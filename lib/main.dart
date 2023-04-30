@@ -89,49 +89,50 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   final TextEditingController _searchController = TextEditingController();
-  // static final mockPokemon = Pokemon(
-  //     id: 1,
-  //     name: 'Bulbasaur',
-  //     imageUrl:
-  //         'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
-  //     attack: 10,
-  //     defense: 10,
-  //     experience: 10,
-  //     specialAttack: 10,
-  //     hp: 10);
+  static final mockPokemon = Pokemon(
+      id: 1,
+      name: 'Bulbasaur',
+      imageUrl:
+          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+      attack: 10,
+      defense: 10,
+      experience: 10,
+      specialAttack: 10,
+      hp: 10);
 
-  // final favoritesPokemon = <Pokemon>[
-  //   _MyHomePageState.mockPokemon,
-  //   _MyHomePageState.mockPokemon,
-  //   _MyHomePageState.mockPokemon
-  // ];
-  final favoritesPokemon = <Pokemon>[];
-  final allPokemon = <Pokemon>[
+  final favoritesPokemon = <Pokemon>[
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon
   ];
-  //  final allPokemon = <Pokemon>[
-  //   _MyHomePageState.mockPokemon,
-  //   _MyHomePageState.mockPokemon,
-  //   _MyHomePageState.mockPokemon,
-  //   _MyHomePageState.mockPokemon,
-  //   _MyHomePageState.mockPokemon,
-  //   _MyHomePageState.mockPokemon,
-  //   _MyHomePageState.mockPokemon,
-  //   _MyHomePageState.mockPokemon,
-  //   _MyHomePageState.mockPokemon
+  // final favoritesPokemon = <Pokemon>[];
+  // final allPokemon = <Pokemon>[
   // ];
+   final allPokemon = <Pokemon>[
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon,
+    _MyHomePageState.mockPokemon
+  ];
   bool isLoading = false;
+  final searchList = <Pokemon>[];
   @override
   void initState() {
     super.initState();
-    setState(() {
-      isLoading = true;
-    });
-    PokeApi.getAllInfoPokemons().then((value) {
-      setState(() {
-        allPokemon.addAll(value);
-        isLoading = false;
-      });
-    });
+    // setState(() {
+    //   isLoading = true;
+    // });
+    // PokeApi.getAllInfoPokemons().then((value) {
+    //   setState(() {
+    //     allPokemon.addAll(value);
+    //     isLoading = false;
+    //   });
+    // });
   }
 
   @override
@@ -156,9 +157,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 isDisabled: isLoading,
                 controller: _searchController,
                 onSearch: (text) {
+                  final searchedPokemon= allPokemon.where((pokemon) => pokemon.name.contains(text));
+                  setState(() {
+                    searchList.clear();
+                    searchList.addAll(searchedPokemon);
+                  });
                   if (kDebugMode) {
                     print(text);
                   }
+                },
+                onClear: (){
+                  setState(() {
+                    searchList.clear();
+                  });
                 },
               ),
               SizedBox(
@@ -167,6 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
               favoritesPokemon.isNotEmpty
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         const Text(
                           "Favoritos",
@@ -191,7 +203,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       ),
                                       const SizedBox(
                                         width: 10,
-                                      ),
+                                      )
                                     ],
                                   ),
                                 )
@@ -235,6 +247,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                 (pokemon) => PokemonContainer(
                                   pokemon: pokemon,
                                   showFavorite: true,
+                                  onFavorite: (poke){
+                                    setState(() {
+                                      poke.isFavorite = !poke.isFavorite;
+                                      favoritesPokemon.add(poke);
+                                    });
+                                  },
                                 ),
                               )
                               .toList(),
