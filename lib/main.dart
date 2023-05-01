@@ -2,6 +2,8 @@ import 'package:flisol_taller_flutter/components/favorite_container.dart';
 import 'package:flisol_taller_flutter/components/list_pokemon_container.dart';
 import 'package:flisol_taller_flutter/components/pokemon_container.dart';
 import 'package:flisol_taller_flutter/components/search_bar.dart';
+import 'package:flisol_taller_flutter/components/tabs/favorites.dart';
+import 'package:flisol_taller_flutter/components/tabs/pokedex.dart';
 import 'package:flisol_taller_flutter/model/pokemon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -90,7 +92,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  final TextEditingController _searchController = TextEditingController();
   static final mockPokemon = Pokemon(
       id: 1,
       name: 'Bulbasaur',
@@ -122,22 +123,44 @@ class _MyHomePageState extends State<MyHomePage> {
   // ];
   bool isLoading = false;
   final searchList = <Pokemon>[];
+
   @override
   void initState() {
     super.initState();
     setState(() {
       isLoading = true;
     });
-    PokeApi.getAllInfoPokemons().then((value) {
+    PokeApi.getAllInfoPokemons(
+      limit: 5
+    ).then((value) {
       setState(() {
         allPokemon.addAll(value);
         isLoading = false;
       });
     });
   }
-
+  onFavoriteSelected(Pokemon pokemon) {
+    setState(() {
+      pokemon.isFavorite = !pokemon.isFavorite;
+      if (favoritesPokemon.contains(pokemon)) {
+        favoritesPokemon.remove(pokemon);
+      } else {
+        favoritesPokemon.add(pokemon);
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
+    final widgetOptions = <Widget>[
+      Pokedex(
+          isLoading: isLoading,
+          allPokemon: allPokemon,
+          favoritesPokemon: favoritesPokemon,
+          searchList: searchList,
+          onFavoriteSelected: onFavoriteSelected,
+          ),
+      Favorites(favoritesPokemon: favoritesPokemon, onFavoriteSelected: onFavoriteSelected),
+    ];
     const double iconTabSize = 30;
     return Scaffold(
       appBar: AppBar(
@@ -150,65 +173,9 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              SearchBar(
-                isDisabled: isLoading,
-                controller: _searchController,
-                onSearch: (text) {
-                  final searchedPokemon = allPokemon
-                      .where((pokemon) => pokemon.name.contains(text));
-                  setState(() {
-                    searchList.clear();
-                    searchList.addAll(searchedPokemon);
-                  });
-                  if (kDebugMode) {
-                    print(text);
-                  }
-                },
-                onClear: () {
-                  setState(() {
-                    searchList.clear();
-                  });
-                },
-              ),
-              SizedBox(
-                height: favoritesPokemon.isNotEmpty ? 20 : 0,
-              ),
-              favoritesPokemon.isNotEmpty
-                  ? FavoriteContainer(favoritesPokemon: favoritesPokemon)
-                  : const SizedBox(),
-              const SizedBox(
-                height: 20,
-              ),
-              isLoading
-                  ? const Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
-                  : ListPokemonContainer(
-                      pokemonList: allPokemon,
-                      favoritesPokemon: favoritesPokemon,
-                      onFavoriteSelected: (poke) {
-                        setState(() {
-                          poke.isFavorite = !poke.isFavorite;
-                          if (poke.isFavorite) {
-                            favoritesPokemon.add(poke);
-                            return;
-                          }
-                          favoritesPokemon.remove(poke);
-                        });
-                      },
-                    ),
-              const SizedBox(
-                height: 10,
-              ),
-            ],
-          ),
-        ),
+        
+          child: widgetOptions[_selectedIndex],
+        
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
