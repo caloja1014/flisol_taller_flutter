@@ -1,3 +1,5 @@
+import 'package:flisol_taller_flutter/components/favorite_container.dart';
+import 'package:flisol_taller_flutter/components/list_pokemon_container.dart';
 import 'package:flisol_taller_flutter/components/pokemon_container.dart';
 import 'package:flisol_taller_flutter/components/search_bar.dart';
 import 'package:flisol_taller_flutter/model/pokemon.dart';
@@ -100,39 +102,38 @@ class _MyHomePageState extends State<MyHomePage> {
       specialAttack: 10,
       hp: 10);
 
-  final favoritesPokemon = <Pokemon>[
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon
-  ];
-  // final favoritesPokemon = <Pokemon>[];
-  // final allPokemon = <Pokemon>[
+  // final favoritesPokemon = <Pokemon>[
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon
   // ];
-   final allPokemon = <Pokemon>[
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon,
-    _MyHomePageState.mockPokemon
-  ];
+  final favoritesPokemon = <Pokemon>[];
+  final allPokemon = <Pokemon>[];
+  // final allPokemon = <Pokemon>[
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon,
+  //   _MyHomePageState.mockPokemon
+  // ];
   bool isLoading = false;
   final searchList = <Pokemon>[];
   @override
   void initState() {
     super.initState();
-    // setState(() {
-    //   isLoading = true;
-    // });
-    // PokeApi.getAllInfoPokemons().then((value) {
-    //   setState(() {
-    //     allPokemon.addAll(value);
-    //     isLoading = false;
-    //   });
-    // });
+    setState(() {
+      isLoading = true;
+    });
+    PokeApi.getAllInfoPokemons().then((value) {
+      setState(() {
+        allPokemon.addAll(value);
+        isLoading = false;
+      });
+    });
   }
 
   @override
@@ -157,7 +158,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 isDisabled: isLoading,
                 controller: _searchController,
                 onSearch: (text) {
-                  final searchedPokemon= allPokemon.where((pokemon) => pokemon.name.contains(text));
+                  final searchedPokemon = allPokemon
+                      .where((pokemon) => pokemon.name.contains(text));
                   setState(() {
                     searchList.clear();
                     searchList.addAll(searchedPokemon);
@@ -166,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     print(text);
                   }
                 },
-                onClear: (){
+                onClear: () {
                   setState(() {
                     searchList.clear();
                   });
@@ -176,96 +178,31 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: favoritesPokemon.isNotEmpty ? 20 : 0,
               ),
               favoritesPokemon.isNotEmpty
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        const Text(
-                          "Favoritos",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: favoritesPokemon
-                                .map(
-                                  (pokemon) => Row(
-                                    children: [
-                                      PokemonContainer(
-                                        pokemon: pokemon,
-                                        showFavorite: false,
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      )
-                                    ],
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ),
-                      ],
-                    )
+                  ? FavoriteContainer(favoritesPokemon: favoritesPokemon)
                   : const SizedBox(),
               const SizedBox(
                 height: 20,
               ),
-
-              isLoading? 
-             const  Expanded(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              )
-              
-              :Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Todos",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+              isLoading
+                  ? const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(),
                       ),
+                    )
+                  : ListPokemonContainer(
+                      pokemonList: allPokemon,
+                      favoritesPokemon: favoritesPokemon,
+                      onFavoriteSelected: (poke) {
+                        setState(() {
+                          poke.isFavorite = !poke.isFavorite;
+                          if (poke.isFavorite) {
+                            favoritesPokemon.add(poke);
+                            return;
+                          }
+                          favoritesPokemon.remove(poke);
+                        });
+                      },
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Wrap(
-                          spacing: 10,
-                          runSpacing: 10,
-                          children: allPokemon
-                              .map(
-                                (pokemon) => PokemonContainer(
-                                  pokemon: pokemon,
-                                  showFavorite: true,
-                                  onFavorite: (poke){
-                                    setState(() {
-                                      poke.isFavorite = !poke.isFavorite;
-                                      if (poke.isFavorite) {
-                                        favoritesPokemon.add(poke);
-                                        return;
-                                      }
-                                      favoritesPokemon.remove(poke);
-                                    });
-                                  },
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               const SizedBox(
                 height: 10,
               ),
