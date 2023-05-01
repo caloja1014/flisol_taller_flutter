@@ -250,7 +250,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                   onFavorite: (poke){
                                     setState(() {
                                       poke.isFavorite = !poke.isFavorite;
-                                      favoritesPokemon.add(poke);
+                                      if (poke.isFavorite) {
+                                        favoritesPokemon.add(poke);
+                                        return;
+                                      }
+                                      favoritesPokemon.remove(poke);
                                     });
                                   },
                                 ),
