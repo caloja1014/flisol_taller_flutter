@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 
 class Pokedex extends StatefulWidget {
   final bool isLoading;
-  final List<Pokemon> favoritesPokemon ;
-  final List<Pokemon> searchList ;
-  final List<Pokemon> allPokemon ;
+  final List<Pokemon> favoritesPokemon;
+  final List<Pokemon> searchList;
+  final List<Pokemon> allPokemon;
   final Function(Pokemon) onFavoriteSelected;
   const Pokedex({
     super.key,
@@ -32,12 +32,12 @@ class _PokedexState extends State<Pokedex> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        SearchBar(
+        SearchBarCustom(
           isDisabled: widget.isLoading,
           controller: _searchController,
           onSearch: (text) {
-            final searchedPokemon =
-                widget.allPokemon.where((pokemon) => pokemon.name.contains(text));
+            final searchedPokemon = widget.allPokemon
+                .where((pokemon) => pokemon.name.contains(text));
             setState(() {
               widget.searchList.clear();
               widget.searchList.addAll(searchedPokemon);
