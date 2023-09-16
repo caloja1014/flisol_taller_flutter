@@ -106,8 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
   //   _MyHomePageState.mockPokemon
   // ];
   final favoritesPokemon = <Pokemon>[];
-  final allPokemon = <Pokemon>[
-  ];
+  final allPokemon = <Pokemon>[];
   //  final allPokemon = <Pokemon>[
   //   _MyHomePageState.mockPokemon,
   //   _MyHomePageState.mockPokemon,
@@ -152,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              SearchBar(
+              SearchBarCustom(
                 isDisabled: isLoading,
                 controller: _searchController,
                 onSearch: (text) {
@@ -204,46 +203,44 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(
                 height: 20,
               ),
-
-              isLoading? 
-             const  Expanded(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              )
-              
-              :Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Todos",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+              isLoading
+                  ? const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  : Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Todos",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Wrap(
+                                spacing: 10,
+                                runSpacing: 10,
+                                children: allPokemon
+                                    .map(
+                                      (pokemon) => PokemonContainer(
+                                        pokemon: pokemon,
+                                        showFavorite: true,
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Wrap(
-                          spacing: 10,
-                          runSpacing: 10,
-                          children: allPokemon
-                              .map(
-                                (pokemon) => PokemonContainer(
-                                  pokemon: pokemon,
-                                  showFavorite: true,
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               const SizedBox(
                 height: 10,
               ),

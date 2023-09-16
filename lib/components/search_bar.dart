@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class SearchBar extends StatefulWidget {
+class SearchBarCustom extends StatefulWidget {
   final TextEditingController controller;
   final Function(String) onSearch;
   bool isDisabled;
-  SearchBar({
+  SearchBarCustom({
     super.key,
     required this.controller,
     required this.onSearch,
@@ -12,10 +12,10 @@ class SearchBar extends StatefulWidget {
   });
 
   @override
-  State<SearchBar> createState() => _SearchBarState();
+  State<SearchBarCustom> createState() => _SearchBarCustomState();
 }
 
-class _SearchBarState extends State<SearchBar> {
+class _SearchBarCustomState extends State<SearchBarCustom> {
   @override
   Widget build(BuildContext context) {
     return Container(
